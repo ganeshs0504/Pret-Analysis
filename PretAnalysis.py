@@ -1,22 +1,39 @@
-# %%
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
 # !pip install altair vega_datasets
 # !pip install pandas
 
-# %%
+
+# In[2]:
+
+
 import re
 import pandas as pd
 import altair as alt
 
-# %%
+
+# In[3]:
+
+
 file = open('free_coffee_chat.txt', encoding = 'UTF-8')
 data = file.read()
 
-# %%
+
+# In[4]:
+
+
 data_list = data.split("\n")
 print("Total number of chats:", len(data_list))
 data_list
 
-# %%
+
+# In[5]:
+
+
 # Removing multi line chats
 pattern = re.compile(r'^\d{2}\/\d{2}\/\d{4}')
 data_with_removed_multiline = [chat for chat in data_list if pattern.search(chat)]
@@ -30,31 +47,49 @@ print("Length of the data list after removing unnecessary lines:", len(data_with
 
 final_data = data_with_chats
 
-# %%
+
+# In[6]:
+
+
 date_list = [msg.split(',')[0] for msg in final_data]
 len(date_list)
 
-# %%
+
+# In[7]:
+
+
 final_data
 
-# %%
+
+# In[8]:
+
+
 pattern = re.compile(r'\d{1,2}:\d{2}\s(am|pm)')
 # temp = [pattern.search(chat) for chat in final_data]
 # time_list = [time.group() for time in temp]
 time_list = [pattern.search(chat).group() for chat in final_data]
 len(time_list)
 
-# %%
+
+# In[9]:
+
+
 pattern = re.compile(r'-\s.*:')
 name_list = [pattern.search(chat).group()[2:-1] for chat in final_data]
 len(name_list)
 
-# %%
+
+# In[10]:
+
+
 pattern = re.compile(r'-\s.*:\s(.*$)')
 msg_list = [pattern.search(chat).group(1) for chat in final_data]
 len(msg_list)
 
-# %%
+
+# In[11]:
+
+
 df = pd.DataFrame(
     {
         'date': date_list,
@@ -66,25 +101,40 @@ df = pd.DataFrame(
 
 df.tail(20)
 
-# %%
+
+# In[12]:
+
+
 df['date_time'] = df['date'] + "::" + df['time']
 df['date_time'] = pd.to_datetime(df['date_time'], format = '%d/%m/%Y::%I:%M %p')
 df['date'] = pd.to_datetime(df['date'], format = '%d/%m/%Y')
 # df['time'] = pd.to_datetime(df['time'])
 
-# %%
+
+# In[13]:
+
+
 df
 
-# %%
+
+# In[14]:
+
+
 s = '☕'
 s.encode('unicode-escape')
 
-# %%
+
+# In[15]:
+
+
 pattern = re.compile(r'☕|🍹|🍵|getting|got a', re.IGNORECASE)
 list_item = [chat for chat in final_data if pattern.search(chat)]
 list_item
 
-# %%
+
+# In[16]:
+
+
 pattern = re.compile(r'☕|🍹|getting|got a', re.IGNORECASE)
 final_df = df[df['message'].str.contains(pattern)]
 final_df.loc[df['name'] == '+44 7944 406269', 'name'] = '.Mags'
@@ -92,10 +142,16 @@ final_df.loc[df['name'] == '+44 7944 406269', 'name'] = '.Mags'
 final_df = final_df[final_df['name'] != "+44 7407 395201"]
 final_df = final_df.reset_index(drop=True)
 
-# %%
+
+# In[17]:
+
+
 final_df.tail(10)
 
-# %%
+
+# In[18]:
+
+
 # Count of total coffee consumed by each member
 total_drinks = alt.Chart(final_df, title='Total drinks consumed by each member').mark_bar().encode(
     x = alt.X('count()').title('Number of Drinks'),
@@ -107,7 +163,10 @@ total_drinks = alt.Chart(final_df, title='Total drinks consumed by each member')
 )
 total_drinks
 
-# %%
+
+# In[19]:
+
+
 weekly_total = alt.Chart(final_df, title='Total number of drinks consumed for each day of week').mark_bar().encode(
     x = alt.X('day(date_time):O').title(None),
     y = alt.Y('count()').title('Number of Drinks'),
@@ -117,7 +176,10 @@ weekly_total = alt.Chart(final_df, title='Total number of drinks consumed for ea
 )
 weekly_total
 
-# %%
+
+# In[20]:
+
+
 monthly_bar = alt.Chart(final_df, title='Month wise individual consumption').mark_bar().encode(
     x = alt.X('yearmonth(date_time):O').title(None),
     xOffset = 'name:N',
@@ -127,7 +189,10 @@ monthly_bar = alt.Chart(final_df, title='Month wise individual consumption').mar
 )
 monthly_bar
 
-# %%
+
+# In[21]:
+
+
 monthly_heatmap = alt.Chart(final_df, title=alt.Title('Month wise individual consumption', subtitle='Heatmap representation of the same bar chart above')).mark_rect().encode(
     alt.X('yearmonth(date_time):O').title(None),
     alt.Color('count()', scale=alt.Scale(scheme='lighttealblue')).title('No. of Drinks'),
@@ -139,7 +204,10 @@ monthly_heatmap = alt.Chart(final_df, title=alt.Title('Month wise individual con
 )
 monthly_heatmap
 
-# %%
+
+# In[22]:
+
+
 weekly_ind = alt.Chart(final_df, title='Weekly individual consumption').mark_bar().encode(
     x = alt.X('day(date_time):O').title(None),
     xOffset = 'name:N',
@@ -149,7 +217,10 @@ weekly_ind = alt.Chart(final_df, title='Weekly individual consumption').mark_bar
 )
 weekly_ind
 
-# %%
+
+# In[23]:
+
+
 weekly_ind_heatmap = alt.Chart(final_df, title=alt.Title('Weekly individual consumption', subtitle='Heatmap representation of the same bar chart above')).mark_rect().encode(
     alt.X('day(date_time):O').title(None),
     # alt.Y('monthdate(date_time):O'),
@@ -162,7 +233,10 @@ weekly_ind_heatmap = alt.Chart(final_df, title=alt.Title('Weekly individual cons
 )
 weekly_ind_heatmap
 
-# %%
+
+# In[24]:
+
+
 time_heatmap = alt.Chart(final_df, title=alt.Title('Beverage consumption time heatmap in a day', subtitle='Heatmap of possible conflicts')).mark_rect().encode(
     alt.X('hours(date_time)').title('Time of Day'),
     # alt.Y('monthdate(date_time):O'),
@@ -175,7 +249,10 @@ time_heatmap = alt.Chart(final_df, title=alt.Title('Beverage consumption time he
 )
 time_heatmap
 
-# %%
+
+# In[26]:
+
+
 # Chart Website Template
 two_charts_template = """
 <!DOCTYPE html>
@@ -234,9 +311,9 @@ two_charts_template = """
 <body>
 
     <div class="header">
-            <h1>PRET SUBSCRIPTION ANALYSIS (WORKINGGGGGG)</h1>
+            <h1>PRET SUBSCRIPTION ANALYSIS</h1>
             <h3>Welcome to my teeny tiny data science project. The data for the below analysis is scraped from the whatsapp group and processed using NLP techniques.</h3>
-            <h3>The charts are generated using a tool called Altair (The main motivation behind this project). Feel free to move your mouse over the charts for the actual values.</h3>
+            <h3>The charts are generated using a tool called Altair (The main motivation behind this project). These are interactive charts, hovering the mouse over reveals actual values. (Best viewed on a computer)</h3>
     </div>
     <div class="chart-container" id="chart1"></div>
     <div class="chart-container" id="chart7"></div>
@@ -283,4 +360,9 @@ with open('index.html', 'w') as f:
         spec7=time_heatmap.to_json(indent=None)
     ))
 
-# %%
+
+# In[ ]:
+
+
+
+
