@@ -18,6 +18,7 @@ jobs:
         git config user.name "ganeshs0504"
         git config user.email "gv.ganesh0504@gmail.com"
         git checkout -b live_webpage
+        git merge origin/master
         git add .
         git commit -m "Automatic update from master"
         git push origin live_webpage
