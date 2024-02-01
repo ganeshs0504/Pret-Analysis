@@ -6,19 +6,14 @@ on:
       - master
 
 jobs:
-  build:
+  updateBranch:
+    name: Update staging branch
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Push changes to live_webpage
-      run: |
-        git config user.name "ganeshs0504"
-        git config user.email "gv.ganesh0504@gmail.com"
-        git checkout -b live_webpage
-        git merge origin/master
-        git add .
-        git commit -m "Automatic update from master"
-        git push origin live_webpage
+    - uses: actions/checkout@master
+    - uses: Embraser01/update-git-branch-action@v1.0.0
+      if: github.ref == 'refs/heads/master'
+      with:
+        branch: live_webpage
+        force: 1 # To push-force to the branch
+        githubToken: ${{ secrets.PAT_TOKEN }} # Github Token
