@@ -20,7 +20,6 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 20px;
         }
         .header h1 {
             color: #333;
@@ -37,10 +36,14 @@
             font-size: 1em;
             margin: 0;
         }
+        .desc_block {
+            margin-bottom: 20px;
+        }
         .header p {
             color: #888;
             font-size: 1em;
             margin: 0;
+            margin-bottom: 20px;
         }
         .chart-container {
             border: 1px solid #ddd;
@@ -56,8 +59,11 @@
 
     <div class="header">
             <h1>PRET SUBSCRIPTION ANALYSIS</h1>
-            <h3>Welcome to my teeny tiny data science project. The data for the below analysis is scraped from the whatsapp group and processed using NLP techniques.</h3>
-            <h3>The charts are generated using a tool called Altair (The main motivation behind this project). These are interactive charts, hovering the mouse over reveals actual values. (Best viewed on a computer)</h3>
+            <p>Version: 05-Feb-2024</p>
+            <div class="desc_block">
+                <h3>Welcome to my teeny tiny data science project. The data for the below analysis is scraped from the whatsapp group and processed using NLP techniques.</h3>
+                <h3>The charts are generated using a tool called Altair (The main motivation behind this project). These are interactive charts, hovering the mouse over reveals actual values. (Best viewed on a computer)</h3>
+            </div>
     </div>
     <div class="chart-container" id="chart1"></div>
     <div class="chart-container" id="chart7"></div>

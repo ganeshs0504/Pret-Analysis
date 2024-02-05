@@ -152,6 +152,12 @@ final_df.tail(10)
 # In[18]:
 
 
+latest_dataset_version = final_df.iloc[-1]['date'].strftime("%d-%b-%Y")
+
+
+# In[19]:
+
+
 # Count of total coffee consumed by each member
 total_drinks = alt.Chart(final_df, title='Total drinks consumed by each member').mark_bar().encode(
     x = alt.X('count()').title('Number of Drinks'),
@@ -164,7 +170,7 @@ total_drinks = alt.Chart(final_df, title='Total drinks consumed by each member')
 total_drinks
 
 
-# In[19]:
+# In[20]:
 
 
 weekly_total = alt.Chart(final_df, title='Total number of drinks consumed for each day of week').mark_bar().encode(
@@ -177,7 +183,7 @@ weekly_total = alt.Chart(final_df, title='Total number of drinks consumed for ea
 weekly_total
 
 
-# In[20]:
+# In[21]:
 
 
 monthly_bar = alt.Chart(final_df, title='Month wise individual consumption').mark_bar().encode(
@@ -190,7 +196,7 @@ monthly_bar = alt.Chart(final_df, title='Month wise individual consumption').mar
 monthly_bar
 
 
-# In[21]:
+# In[22]:
 
 
 monthly_heatmap = alt.Chart(final_df, title=alt.Title('Month wise individual consumption', subtitle='Heatmap representation of the same bar chart above')).mark_rect().encode(
@@ -205,7 +211,7 @@ monthly_heatmap = alt.Chart(final_df, title=alt.Title('Month wise individual con
 monthly_heatmap
 
 
-# In[22]:
+# In[23]:
 
 
 weekly_ind = alt.Chart(final_df, title='Weekly individual consumption').mark_bar().encode(
@@ -218,7 +224,7 @@ weekly_ind = alt.Chart(final_df, title='Weekly individual consumption').mark_bar
 weekly_ind
 
 
-# In[23]:
+# In[24]:
 
 
 weekly_ind_heatmap = alt.Chart(final_df, title=alt.Title('Weekly individual consumption', subtitle='Heatmap representation of the same bar chart above')).mark_rect().encode(
@@ -234,7 +240,7 @@ weekly_ind_heatmap = alt.Chart(final_df, title=alt.Title('Weekly individual cons
 weekly_ind_heatmap
 
 
-# In[24]:
+# In[25]:
 
 
 time_heatmap = alt.Chart(final_df, title=alt.Title('Beverage consumption time heatmap in a day', subtitle='Heatmap of possible conflicts')).mark_rect().encode(
@@ -250,7 +256,7 @@ time_heatmap = alt.Chart(final_df, title=alt.Title('Beverage consumption time he
 time_heatmap
 
 
-# In[26]:
+# In[29]:
 
 
 # Chart Website Template
@@ -276,7 +282,6 @@ two_charts_template = """
         }}
         .header {{
             text-align: center;
-            margin-bottom: 20px;
         }}
         .header h1 {{
             color: #333;
@@ -293,10 +298,14 @@ two_charts_template = """
             font-size: 1em;
             margin: 0;
         }}
+        .desc_block {{
+            margin-bottom: 20px;
+        }}
         .header p {{
             color: #888;
             font-size: 1em;
             margin: 0;
+            margin-bottom: 20px;
         }}
         .chart-container {{
             border: 1px solid #ddd;
@@ -312,8 +321,11 @@ two_charts_template = """
 
     <div class="header">
             <h1>PRET SUBSCRIPTION ANALYSIS</h1>
-            <h3>Welcome to my teeny tiny data science project. The data for the below analysis is scraped from the whatsapp group and processed using NLP techniques.</h3>
-            <h3>The charts are generated using a tool called Altair (The main motivation behind this project). These are interactive charts, hovering the mouse over reveals actual values. (Best viewed on a computer)</h3>
+            <p>Version: {dataset_version}</p>
+            <div class="desc_block">
+                <h3>Welcome to my teeny tiny data science project. The data for the below analysis is scraped from the whatsapp group and processed using NLP techniques.</h3>
+                <h3>The charts are generated using a tool called Altair (The main motivation behind this project). These are interactive charts, hovering the mouse over reveals actual values. (Best viewed on a computer)</h3>
+            </div>
     </div>
     <div class="chart-container" id="chart1"></div>
     <div class="chart-container" id="chart7"></div>
@@ -351,6 +363,7 @@ with open('index.html', 'w') as f:
         vega_version=alt.VEGA_VERSION,
         vegalite_version=alt.VEGALITE_VERSION,
         vegaembed_version=alt.VEGAEMBED_VERSION,
+        dataset_version = latest_dataset_version,
         spec1=total_drinks.to_json(indent=None),
         spec2=weekly_total.to_json(indent=None),
         spec3=monthly_bar.to_json(indent=None),
