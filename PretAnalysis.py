@@ -137,7 +137,6 @@ list_item
 
 pattern = re.compile(r'☕|🍹|getting|got a', re.IGNORECASE)
 final_df = df[df['message'].str.contains(pattern)]
-final_df.loc[df['name'] == '+44 7944 406269', 'name'] = '.Mags'
 # Removing bitch from the dataset
 final_df = final_df[final_df['name'] != "+44 7407 395201"]
 final_df = final_df.reset_index(drop=True)
