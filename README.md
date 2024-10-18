@@ -1,4 +1,4 @@
-# ☕️ Pret Coffee Subscription Hackathon ☕️
+# ☕️ Pret Coffee Subscription Analysis ☕️
 
 Hey there! 👋
 
